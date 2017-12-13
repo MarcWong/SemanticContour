@@ -2,7 +2,7 @@
 
 gt = imread('out249-gt-1.jpg');
 gt_origin = imread('out249-gt.png');
-hough_bw  = imread('nms-thres1.5.jpg');
+nms_img  = imread('249_canny_mask.jpg');
 gt_origin = rgb2gray(gt_origin);
 sum = 0;
 for i = 1:256
@@ -22,13 +22,13 @@ for i = 1:256
     for j = 1:256
         if gt(i,j) > 128
             gt_pos = gt_pos+1;
-            if hough_bw(i,j) > 128
+            if nms_img(i,j) > 128
                 TP = TP + 1;
             elseif gt_origin(i,j) > 128
                 FP = FP + 1;
             end
         else
-            if hough_bw(i,j) > 128
+            if nms_img(i,j) > 128
                 FN = FN + 1;
             else
                 TN = TN + 1;

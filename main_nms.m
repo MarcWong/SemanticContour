@@ -1,11 +1,14 @@
 %%parameters
-gray_threshold = 50;
+low_threshold = 50;
+high_threshold = 166;
 %k = 5;
 %nms_threshold = [0.8*k k];
-load_from_mat = 1;
+load_from_mat = 0;
 %%
-fid = fopen('~/train_1.lst');
-path = 'image/train/';
+%fid = fopen('~/train_1.lst');
+%path = 'image/train/';
+fid = fopen('~/ningbo.txt');
+path = 'image/ningbo/';
 while ~feof(fid)
     file_name = fgetl(fid);
     file_name = strrep(file_name,'train/aug_data/0.0_1_0/','');
@@ -41,16 +44,20 @@ while ~feof(fid)
         aa =uint8((uint16(a1) + uint16(a2) + uint16(a3) + uint16(a4) + uint16(a5)+uint16(a6))./6.0);%fusion image
     end
 
-
     [m n] = size(aa);
 
     for i = 1:m
         for j = 1:n
-            if aa(i,j) < gray_threshold %threshold
+            if aa(i,j) < low_threshold %threshold
                 aa(i,j) = 0;
+            %elseif aa(i,j) > high_threshold
+             %   aa(i,j) = 255;
             end
         end
     end
+    sh = graythresh(aa) + 0.06;
+    mask = im2bw(aa, sh);
+    imagesc(mask);
     %imshow(aa);
     imwrite(aa,[path file_name '_fusion.jpg']);
     nms1 = nms(a1);
@@ -60,7 +67,7 @@ while ~feof(fid)
     nms5 = nms(a5);
     nms_fusion = nms(aa);
 
-    %{ visualization
+    %{
     figure;
     subplot(221);
     imshow(origin);
@@ -70,6 +77,11 @@ while ~feof(fid)
     imagesc(nms1),colormap(gray),axis image, axis off;
     subplot(224);
     imagesc(nms_fusion),colormap(gray),axis image, axis off;
-    imwrite(nms_fusion,[path file_name '_nms.jpg']);
     %}
+    origin_bw = rgb2gray(origin);
+    canny_bw = edge(origin_bw,'canny');
+    canny_bw = canny_bw .* mask;
+    nms_fusion = nms_fusion .* mask;
+    imwrite(canny_bw,[path file_name '_canny_mask.jpg']);
+    imwrite(nms_fusion,[path file_name '_nms.jpg']);
 end
