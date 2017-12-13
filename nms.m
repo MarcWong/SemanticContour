@@ -52,7 +52,7 @@ function [eout,thresh] = nms(varargin)
 % Copyright 1993-1998 The MathWorks, Inc. All Rights Reserved.
 % $Revision: 5.14 $ $Date: 1998/12/17 17:20:14 $
 
-adjustParam = 1.1;
+adjustParam = 1.3;
 
 % ?????? --> ???????????
 [a,thresh,sigma,H,kx,ky] = parse_inputs(varargin{:});

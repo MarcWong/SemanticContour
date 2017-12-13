@@ -2,7 +2,7 @@
 
 gt = imread('out249-gt-1.jpg');
 gt_origin = imread('out249-gt.png');
-hough_bw  = imread('canny.jpg');
+hough_bw  = imread('nms-thres1.5.jpg');
 gt_origin = rgb2gray(gt_origin);
 sum = 0;
 for i = 1:256
