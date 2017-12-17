@@ -1,9 +1,18 @@
 %% statistics
 
-gt = imread('out249-gt-1.jpg');
+thres = 128;
+
+gt = imread('out249-gt.jpg');
 gt_origin = imread('out249-gt.png');
-nms_img  = imread('249_canny_mask.jpg');
-gt_origin = rgb2gray(gt_origin);
+%nms_img  = imread('out249-fusion.png');
+nms_img  = imread('249_canny_mask_0.3.jpg');
+nms_img = expand(nms_img,128);
+nms_img = expand(nms_img,128);
+nms = imread('nms-thres1.5.jpg');
+nms_img = nms_img + nms;
+if length(size(gt_origin)) == 3
+    gt_origin = rgb2gray(gt_origin);
+end
 sum = 0;
 for i = 1:256
     for j = 1:256
@@ -20,16 +29,16 @@ TN = 0;
 FN = 0;
 for i = 1:256
     for j = 1:256
-        if gt(i,j) > 128
+        if gt(i,j) > thres
             gt_pos = gt_pos+1;
-            if nms_img(i,j) > 128
+            if nms_img(i,j) > thres
                 TP = TP + 1;
-            elseif gt_origin(i,j) > 128
-                FP = FP + 1;
+            elseif gt_origin(i,j) > thres
+                FN = FN + 1;
             end
         else
-            if nms_img(i,j) > 128
-                FN = FN + 1;
+            if nms_img(i,j) > thres
+                FP = FP + 1;
             else
                 TN = TN + 1;
             end

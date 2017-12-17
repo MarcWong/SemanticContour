@@ -13,7 +13,7 @@ while ~feof(fid)
     file_name = fgetl(fid);
     file_name = strrep(file_name,'train/aug_data/0.0_1_0/','');
     file_name = strrep(file_name,'.jpg','');
-    c = imread(['ningbo/' file_name '_canny_mask.jpg']);
+    c = imread(['ningbo/' file_name '_canny.jpg']);
     b = imread(['ningbo/' file_name '-gt.png']);
     %c = imread(['train/' file_name '_fusion.jpg']);
     %b = imread(['train/' file_name '-gt.png']);
@@ -43,5 +43,5 @@ while ~feof(fid)
     %e = (e + ec);
 
     e=uint8(e);
-    imwrite(e,[path file_name '_visualization.png']);
+    imwrite(e,[path file_name '_visualization_nomask.png']);
 end

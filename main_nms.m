@@ -55,10 +55,11 @@ while ~feof(fid)
             end
         end
     end
-    sh = graythresh(aa) + 0.06;
-    mask = im2bw(aa, sh);
-    imagesc(mask);
-    %imshow(aa);
+    sh = graythresh(aa);
+    mask = im2bw(aa,sh);
+    
+    %imwrite(mask,'mask.jpg');
+    %imshow(mask);
     imwrite(aa,[path file_name '_fusion.jpg']);
     nms1 = nms(a1);
     nms2 = nms(a2);
@@ -79,9 +80,9 @@ while ~feof(fid)
     imagesc(nms_fusion),colormap(gray),axis image, axis off;
     %}
     origin_bw = rgb2gray(origin);
-    canny_bw = edge(origin_bw,'canny');
-    canny_bw = canny_bw .* mask;
+    canny_bw = edge(origin_bw,'canny',0.2);
+    %canny_bw = canny_bw .* mask;
     nms_fusion = nms_fusion .* mask;
-    imwrite(canny_bw,[path file_name '_canny_mask.jpg']);
+    imwrite(canny_bw,[path file_name '_canny.jpg']);
     imwrite(nms_fusion,[path file_name '_nms.jpg']);
 end
