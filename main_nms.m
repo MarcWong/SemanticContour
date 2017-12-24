@@ -81,8 +81,8 @@ while ~feof(fid)
     %}
     origin_bw = rgb2gray(origin);
     canny_bw = edge(origin_bw,'canny',0.2);
-    %canny_bw = canny_bw .* mask;
+    canny_bw = canny_bw .* mask;
     nms_fusion = nms_fusion .* mask;
-    imwrite(canny_bw,[path file_name '_canny.jpg']);
-    imwrite(nms_fusion,[path file_name '_nms.jpg']);
+    imwrite(canny_bw,[path file_name '_canny_mask.jpg']);
+    imwrite(nms_fusion,[path file_name '_nms_mask.jpg']);
 end

@@ -3,8 +3,8 @@ expansion_times = 2;
 gt_thres = 128;
 
 %%
-%fid = fopen('~/train_1.lst');
 path = 'visualization/';
+%fid = fopen('~/train_1.lst');
 fid = fopen('~/ningbo.txt');
 while ~feof(fid)
     expansion = expansion_times;
@@ -13,7 +13,9 @@ while ~feof(fid)
     file_name = fgetl(fid);
     file_name = strrep(file_name,'train/aug_data/0.0_1_0/','');
     file_name = strrep(file_name,'.jpg','');
-    c = imread(['ningbo/' file_name '_canny.jpg']);
+    %c = imread(['ningbo/' file_name '_nms.jpg']);
+    c = imread(['output/' file_name '_expansion_cmask.png']);
+    c = uint8(c).*255;
     b = imread(['ningbo/' file_name '-gt.png']);
     %c = imread(['train/' file_name '_fusion.jpg']);
     %b = imread(['train/' file_name '-gt.png']);
@@ -43,5 +45,5 @@ while ~feof(fid)
     %e = (e + ec);
 
     e=uint8(e);
-    imwrite(e,[path file_name '_visualization_nomask.png']);
+    imwrite(e,[path file_name '_visualization_nms.png']);
 end

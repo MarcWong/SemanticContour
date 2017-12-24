@@ -52,7 +52,7 @@ function [eout,thresh] = nms(varargin)
 % Copyright 1993-1998 The MathWorks, Inc. All Rights Reserved.
 % $Revision: 5.14 $ $Date: 1998/12/17 17:20:14 $
 
-adjustParam = 1.3;
+adjustParam = 0.5;
 
 % ?????? --> ???????????
 [a,thresh,sigma,H,kx,ky] = parse_inputs(varargin{:});
@@ -74,8 +74,8 @@ e = repmat(logical(uint8(0)), m, n);
 % Magic numbers ?????
 
 GaussianDieOff = .0001;
-PercentOfPixelsNotEdges = .3; % Used for selecting thresholds
-ThresholdRatio = .6; % Low thresh is this fraction of the high.
+PercentOfPixelsNotEdges = .2; % Used for selecting thresholds
+ThresholdRatio = .2; % Low thresh is this fraction of the high.
 
 % Design the filters - a gaussian and its derivative
 
@@ -152,8 +152,11 @@ end
 rstrong = rem(idxStrong-1, m)+1;
 cstrong = floor((idxStrong-1)/m)+1;
 e = bwselect(e, cstrong, rstrong, 8);
-e = bwmorph(e, 'thin', 2); % Thin double (or triple) pixel wide contours
-imwrite(e,'nms.jpg');
+e = bwmorph(e, 'bridge',2);
+e = bwmorph(e, 'dilate'); 
+e = bwmorph(e, 'thin',3);
+e = bwmorph(e, 'bridge',2);
+
 if nargout==0,
 imshow(e);
 else
