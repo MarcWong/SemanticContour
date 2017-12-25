@@ -1,22 +1,40 @@
 %%parameters
 expansion_times = 1;
 gt_thres = 128;
-
+% 0 for ningbo3539, 1 for bsds
+dataset = 0;
+if dataset==0
+    srcpath = 'ningbo/';
+    fid = fopen('~/ningbo.txt');
+    outputpath = 'output/';
+else
+    srcpath = 'train/';
+    fid = fopen('~/train_1.lst');
+    outputpath = 'bsds_output/';
+end
 %%
-%fid = fopen('~/train_1.lst');
-path = 'output/';
-fid = fopen('~/ningbo.txt');
 while ~feof(fid)
     expansion = expansion_times;
-    e = false([256 256]);
-    visit = false([256 256]);
     file_name = fgetl(fid);
     file_name = strrep(file_name,'train/aug_data/0.0_1_0/','');
     file_name = strrep(file_name,'.jpg','');
-    c = imread(['ningbo/' file_name '_nms_mask.jpg']);
-    b = imread(['ningbo/' file_name '_canny.jpg']);
+    c = imread([srcpath file_name '_nms.jpg']);
+    b = imread([srcpath file_name '_canny_mask.jpg']);
+    
+    seed = uint8(zeros(m,n));
+    for ii = 1:m
+        for jj = 1:n
+            if c(ii,jj)>128 && b(ii,jj)>128
+                seed(ii,jj) = 255;
+            end
+        end
+    end
+    
+    imwrite(seed,[outputpath file_name '_seed.png']);
     
     [m n]=size(c);
+    e = false([m n]);
+    visit = false([m n]);
     c=c>128;
     b=b>128;
     for ii = 1:m
@@ -55,5 +73,5 @@ while ~feof(fid)
    
     %figure(1);
     %imshow(e);
-    imwrite(e,[path file_name '_expansion_nmask.png']);
+    imwrite(e,[outputpath file_name '_expansion_cmask.png']);
 end

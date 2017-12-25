@@ -1,22 +1,33 @@
 %%parameters
 expansion_times = 2;
 gt_thres = 128;
-
+% 0 for ningbo3539, 1 for bsds
+dataset = 0;
+visualParameter = 'expansion_nms';
+file_suffix = '.png';
+if dataset == 0
+    filepath = 'ningbo/';
+    nmspath = 'output/';
+    path = 'visualization/';
+    fid = fopen('~/ningbo.txt');
+else
+    filepath = 'train/';
+    nmspath = 'bsds_output/';
+    path = 'bsds_visualization/';
+    fid = fopen('~/train_1.lst');
+end
 %%
-path = 'visualization/';
-%fid = fopen('~/train_1.lst');
-fid = fopen('~/ningbo.txt');
 while ~feof(fid)
-    expansion = expansion_times;
-    e = zeros([256 256 3]);
-    ec = zeros([256 256 3]);
     file_name = fgetl(fid);
     file_name = strrep(file_name,'train/aug_data/0.0_1_0/','');
     file_name = strrep(file_name,'.jpg','');
-    %c = imread(['ningbo/' file_name '_nms.jpg']);
-    c = imread(['output/' file_name '_expansion_cmask.png']);
-    c = uint8(c).*255;
-    b = imread(['ningbo/' file_name '-gt.png']);
+    
+    c = imread([nmspath file_name '_' visualParameter file_suffix]);
+    %c = imread([nmspath file_name '_expansion_cmask.png']);
+    if max(max(c(:,:)))==1
+        c = uint8(c).*255;
+    end
+    b = imread([filepath file_name '-gt.png']);
     %c = imread(['train/' file_name '_fusion.jpg']);
     %b = imread(['train/' file_name '-gt.png']);
     %a = imread('canny.jpg');
@@ -25,7 +36,9 @@ while ~feof(fid)
     end
     
     [m n]=size(b);
+    e = zeros([m n 3]);
     
+    expansion = expansion_times;
     while expansion > 0
         b = expand(b,gt_thres);
         expansion = expansion -1;
@@ -45,5 +58,5 @@ while ~feof(fid)
     %e = (e + ec);
 
     e=uint8(e);
-    imwrite(e,[path file_name '_visualization_nms.png']);
+    imwrite(e,[path file_name '_visualization_' visualParameter '.png']);
 end

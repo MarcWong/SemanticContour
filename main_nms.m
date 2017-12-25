@@ -1,22 +1,32 @@
-%%parameters
-low_threshold = 50;
+%%
+%parameters
+low_threshold = 0;
 high_threshold = 166;
 %k = 5;
 %nms_threshold = [0.8*k k];
-load_from_mat = 0;
+
+% 0 for ningbo3539, 1 for bsds
+dataset = 0;
+if(dataset == 0)
+    fid = fopen('~/ningbo.txt');
+    path = 'image/ningbo/';
+    %unet_path = '/Users/marcWong/Dataset/unet-result/';
+else
+    fid = fopen('~/train_1.lst');
+    path = 'image/train/';
+end
+
 %%
-%fid = fopen('~/train_1.lst');
-%path = 'image/train/';
-fid = fopen('~/ningbo.txt');
-path = 'image/ningbo/';
 while ~feof(fid)
     file_name = fgetl(fid);
     file_name = strrep(file_name,'train/aug_data/0.0_1_0/','');
     file_name = strrep(file_name,'.jpg','');
     origin = imread([path file_name '.jpg']);
-    gt = rgb2gray(imread([path file_name '-gt.png']));
-
-    if load_from_mat == 1
+    gt = imread([path file_name '-gt.png']);
+    if length(size(gt))==3
+        gt = rgb2gray(gt);
+    end
+    if dataset == 1
         load([path file_name '.mat']);
         a1 = double(FrameStack{1});
         a2 = double(FrameStack{2});
@@ -55,34 +65,40 @@ while ~feof(fid)
             end
         end
     end
+    
+    imwrite(aa,[path file_name '_fusion.jpg']);
+    
+    %hed mask
     sh = graythresh(aa);
     mask = im2bw(aa,sh);
-    
+    %numb = str2double(file_name);
+    %numb = numb -1;
+    %mask = imread([unet_path num2str(numb) '-predict.png']);
+    %mask = logical(mask);
     %imwrite(mask,'mask.jpg');
-    %imshow(mask);
-    imwrite(aa,[path file_name '_fusion.jpg']);
-    nms1 = nms(a1);
-    nms2 = nms(a2);
-    nms3 = nms(a3);
-    nms4 = nms(a4);
-    nms5 = nms(a5);
+    
+    %nms1 = nms(a1);
+    %nms2 = nms(a2);
+    %nms3 = nms(a3);
+    %nms4 = nms(a4);
+    %nms5 = nms(a5);
     nms_fusion = nms(aa);
-
+    
+    %subplot(121);
+    %imshow(gt);
+    %subplot(122);
+    %imshow(mask);
     %{
-    figure;
-    subplot(221);
-    imshow(origin);
-    subplot(222);
-    imshow(gt);
     subplot(223);
     imagesc(nms1),colormap(gray),axis image, axis off;
     subplot(224);
     imagesc(nms_fusion),colormap(gray),axis image, axis off;
+    %imshow(origin);
     %}
     origin_bw = rgb2gray(origin);
     canny_bw = edge(origin_bw,'canny',0.2);
     canny_bw = canny_bw .* mask;
-    nms_fusion = nms_fusion .* mask;
+    %nms_fusion = nms_fusion .* mask;
     imwrite(canny_bw,[path file_name '_canny_mask.jpg']);
-    imwrite(nms_fusion,[path file_name '_nms_mask.jpg']);
+    imwrite(nms_fusion,[path file_name '_nms_default.jpg']);
 end
