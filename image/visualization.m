@@ -48,11 +48,7 @@ while ~feof(fid)
     [m n]=size(b);
     e = zeros([m n 3]);
     
-    expansion = expansion_times;
-    while expansion > 0
-        b = expand(b,gt_thres);
-        expansion = expansion -1;
-    end
+    b = expand(b,gt_thres,expansion_times);
     for i = 1:m
         for j = 1:n
             if c(i,j)>150 && b(i,j)>gt_thres

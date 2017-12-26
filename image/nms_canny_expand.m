@@ -78,7 +78,7 @@ while ~feof(fid)
     end
     %%
     % morphing
-    e_exp = expand(e,0);
+    e_exp = expand(e,0,1);
     e2 = false([m n]);
     
     for ii = 1:m

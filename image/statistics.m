@@ -31,15 +31,14 @@ while ~feof(fid)
     if max(max(nms_img(:,:)))==1
         nms_img = uint8(nms_img) .*255;
     end
-    nms_img = expand(nms_img,128);
-    nms_img = expand(nms_img,128);
+    nms_img = expand(nms_img,128,2);
     if length(size(gt_origin)) == 3
         gt_origin = rgb2gray(gt_origin);
     end
     if length(size(gt)) == 3
         gt = rgb2gray(gt);
     end
-    gt = expand(gt,128);
+    gt = expand(gt,128,1);
     
     sum = 0;
     for i = 1:256
