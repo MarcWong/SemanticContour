@@ -3,18 +3,28 @@ expansion_times = 2;
 gt_thres = 128;
 % 0 for ningbo3539, 1 for bsds
 dataset = 0;
-visualParameter = 'expansion_nms';
+%----------------------------------------%
+%optional parameters:
+%_expansion_cmask_morphing
+%_expansion_cmask
+%.png
+
+%_canny
+%.jpg
+visualParameter = '_expansion_cmask_morphing';
 file_suffix = '.png';
+%----------------------------------------%
+
 if dataset == 0
     filepath = 'ningbo/';
     nmspath = 'output/';
     path = 'visualization/';
-    fid = fopen('~/ningbo.txt');
+    fid = fopen('../ningbo.txt');
 else
     filepath = 'train/';
     nmspath = 'bsds_output/';
     path = 'bsds_visualization/';
-    fid = fopen('~/train_1.lst');
+    fid = fopen('../train_1.lst');
 end
 %%
 while ~feof(fid)
@@ -22,7 +32,7 @@ while ~feof(fid)
     file_name = strrep(file_name,'train/aug_data/0.0_1_0/','');
     file_name = strrep(file_name,'.jpg','');
     
-    c = imread([nmspath file_name '_' visualParameter file_suffix]);
+    c = imread([nmspath file_name visualParameter file_suffix]);
     %c = imread([nmspath file_name '_expansion_cmask.png']);
     if max(max(c(:,:)))==1
         c = uint8(c).*255;
@@ -58,5 +68,5 @@ while ~feof(fid)
     %e = (e + ec);
 
     e=uint8(e);
-    imwrite(e,[path file_name '_visualization_' visualParameter '.png']);
+    imwrite(e,[path file_name '_visualization' visualParameter '.png']);
 end

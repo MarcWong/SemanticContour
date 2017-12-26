@@ -5,11 +5,11 @@ dataset = 0;
 if dataset == 0
     filepath = 'ningbo/';
     nmspath = 'output/';
-    fid = fopen('~/ningbo.txt');
+    fid = fopen('../ningbo.txt');
 else
     filepath = 'train/';
     nmspath = 'bsds_output/';
-    fid = fopen('~/train_1.lst');
+    fid = fopen('../train_1.lst');
 end
 P_sum = 0;
 R_sum = 0;
@@ -25,6 +25,7 @@ while ~feof(fid)
     gt_origin = imread([filepath file_name '-gt.png']);
     %gt_origin = imread([filepath file_name '.png']);
     nms_img  = imread([nmspath file_name '_expansion_cmask.png']); 
+    %nms_img  = imread([nmspath file_name '_expansion_cmask_morphing.png']);
     %nms_img  = imread([filepath file_name '_canny.jpg']); 
     %nms_img  = imread([nmspath file_name '_expansion_nms.png']);
     if max(max(nms_img(:,:)))==1

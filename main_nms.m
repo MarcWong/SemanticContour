@@ -8,11 +8,11 @@ high_threshold = 166;
 % 0 for ningbo3539, 1 for bsds
 dataset = 0;
 if(dataset == 0)
-    fid = fopen('~/ningbo.txt');
+    fid = fopen('ningbo.txt');
     path = 'image/ningbo/';
     %unet_path = '/Users/marcWong/Dataset/unet-result/';
 else
-    fid = fopen('~/train_1.lst');
+    fid = fopen('train_1.lst');
     path = 'image/train/';
 end
 
