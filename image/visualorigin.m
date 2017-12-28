@@ -1,5 +1,5 @@
 %%parameters
-expansion_times = 4;
+expansion_times = 2;
 gt_thres = 128;
 % 0 for ningbo3539, 1 for bsds
 dataset = 2;
@@ -42,43 +42,16 @@ while ~feof(fid)
     if max(max(c(:,:)))==1
         c = uint8(c).*255;
     end
-    b = imread([filepath file_name '-gt.png']);
-    %b = imread([outputpath file_name '_fusion.jpg']);
-    %b = imread(['train/' file_name '-gt.png']);
-    %a = imread('canny.jpg');
-    if length(size(b))==3
-        b = rgb2gray(b);
-    end
-    
-    
-    
-    bb = imread([filepath file_name '.jpg']);
+    b = imread([filepath file_name '.jpg']);
     [m n]=size(b);
-    
-    
-    
-    e = zeros([m n 3]);
-    
-    b = expand(b,gt_thres,expansion_times);
-    for i = 1:m
-        for j = 1:n
-            if c(i,j)>150 && b(i,j)>gt_thres
-                e(i,j,1) = 255;
-                bb(i,j,1) = 255;
-                bb(i,j,2) = 0;
-                bb(i,j,3) = 0;
-            elseif c(i,j)>150 && b(i,j)<= gt_thres
-                e(i,j,2) = 255;
-            elseif b(i,j)>gt_thres && c(i,j)<= 150
-                e(i,j,3) = 255;
+    for i = 1:512
+        for j = 1:512;
+            if c(i,j)>128
+                b(i,j,1) = 255;
+                b(i,j,2) = 0;
+                b(i,j,3) = 0;
             end
         end
     end
-
-    %e = (e + ec);
-
-    e=uint8(e);
-    
-    imwrite(bb,[outputpath file_name '_visualization_gt' visualParameter '.png']);
-    imwrite(e,[outputpath file_name '_visualization' visualParameter '.png']);
+    imwrite(b,[outputpath file_name '_visualization_gt' visualParameter '.png']);
 end

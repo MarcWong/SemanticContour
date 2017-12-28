@@ -52,7 +52,7 @@ function [eout,thresh] = nms(varargin)
 % Copyright 1993-1998 The MathWorks, Inc. All Rights Reserved.
 % $Revision: 5.14 $ $Date: 1998/12/17 17:20:14 $
 
-adjustParam = 1.0;
+adjustParam = 1.2;
 
 % ?????? --> ???????????
 [a,thresh,sigma,H,kx,ky] = parse_inputs(varargin{:});
@@ -74,8 +74,8 @@ e = repmat(logical(uint8(0)), m, n);
 % Magic numbers ?????
 
 GaussianDieOff = .0001;
-PercentOfPixelsNotEdges = .5; % Used for selecting thresholds
-ThresholdRatio = .5; % Low thresh is this fraction of the high.
+PercentOfPixelsNotEdges = .8; % Used for selecting thresholds
+ThresholdRatio = .8; % Low thresh is this fraction of the high.
 
 % Design the filters - a gaussian and its derivative
 

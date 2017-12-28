@@ -1,26 +1,28 @@
 %%parameters
 expansion_times = 1;
 gt_thres = 128;
-block_num  = 8;
+block_num  = 5;
 % 0 for ningbo3539, 1 for bsds
-dataset = 0;
-if dataset==0
-    srcpath = 'ningbo/';
-    fid = fopen('../ningbo.txt');
-    outputpath = 'output/';
+dataset = 2;
+if(dataset == 0)
+    fid = fopen('ningbo.txt');
+    path = 'image/ningbo/';
+    %unet_path = '/Users/marcWong/Dataset/unet-result/';
+elseif dataset ==1
+    fid = fopen('train_1.lst');
+    path = 'image/train/';
 else
-    srcpath = 'train/';
-    fid = fopen('../train_1.lst');
-    outputpath = 'bsds_output/';
+    fid = fopen('/Users/marcWong/Tools/imgProcess/split.txt');
+    path = '/Users/marcWong/Dataset/hed-newdataset-output/';
+    outputpath = '/Users/marcWong/Dataset/hed-newdataset-output/';
 end
 %%
 while ~feof(fid)
-    expansion = expansion_times;
     file_name = fgetl(fid);
     file_name = strrep(file_name,'train/aug_data/0.0_1_0/','');
     file_name = strrep(file_name,'.jpg','');
-    c = imread([srcpath file_name '_nms.jpg']);
-    b = imread([srcpath file_name '_canny_mask.jpg']);
+    c = imread([path file_name '_nms.jpg']);
+    b = imread([path file_name '_canny_mask.jpg']);
     [m n]=size(c);
     
     %%
@@ -78,7 +80,9 @@ while ~feof(fid)
     end
     %%
     % morphing
-    e_exp = expand(e,0,1);
+    
+    %{
+    e_exp = expand(e,0,expansion_times);
     e2 = false([m n]);
     
     for ii = 1:m
@@ -91,9 +95,8 @@ while ~feof(fid)
                 neighbour=[-1 -1;-1 0;-1 1;0 -1;0 1;1 -1;1 0;1 1];  %8 neighbor
                 queue_head=1; queue_tail=1;
                 q{queue_tail} = [ii jj];
-                queue_tail = queue_tail+1; 
+                queue_tail = queue_tail+1;
                 [ser1 ser2] = size(neighbour);
-                
                 while queue_head ~= queue_tail
                     pix = q{queue_head};
                     for i = 1:ser1
@@ -115,5 +118,6 @@ while ~feof(fid)
             end
         end
     end
-    imwrite(e2,[outputpath file_name '_expansion_cmask_morphing.png']);
+    %}
+    imwrite(e,[outputpath file_name '_expansion_cmask_morphing.png']);
 end

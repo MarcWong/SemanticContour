@@ -6,14 +6,18 @@ high_threshold = 166;
 %nms_threshold = [0.8*k k];
 
 % 0 for ningbo3539, 1 for bsds
-dataset = 0;
+dataset = 2;
 if(dataset == 0)
     fid = fopen('ningbo.txt');
     path = 'image/ningbo/';
     %unet_path = '/Users/marcWong/Dataset/unet-result/';
-else
+elseif dataset ==1
     fid = fopen('train_1.lst');
     path = 'image/train/';
+else
+    fid = fopen('/Users/marcWong/Tools/imgProcess/split.txt');
+    path = '/Users/marcWong/Dataset/hed-newdataset/';
+    outputpath = '/Users/marcWong/Dataset/hed-newdataset-output/';
 end
 
 %%
@@ -66,10 +70,11 @@ while ~feof(fid)
         end
     end
     
-    imwrite(aa,[path file_name '_fusion.jpg']);
+    imwrite(aa,[outputpath file_name '_fusion.jpg']);
     
     %hed mask
     sh = graythresh(aa);
+    sh = sh + 0.05;
     mask = im2bw(aa,sh);
     %numb = str2double(file_name);
     %numb = numb -1;
@@ -99,6 +104,7 @@ while ~feof(fid)
     canny_bw = edge(origin_bw,'canny',0.2);
     canny_bw = canny_bw .* mask;
     %nms_fusion = nms_fusion .* mask;
-    imwrite(canny_bw,[path file_name '_canny_mask.jpg']);
-    imwrite(nms_fusion,[path file_name '_nms_default.jpg']);
+    imwrite(canny_bw,[outputpath file_name '_canny_mask.jpg']);
+    nms_fusion = expand(nms_fusion,0,1);
+    imwrite(nms_fusion,[outputpath file_name '_nms.jpg']);
 end
