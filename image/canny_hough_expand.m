@@ -13,16 +13,16 @@ elseif dataset ==1
     path = 'image/train/';
 else
     fid = fopen('/Users/marcWong/Tools/imgProcess/split.txt');
-    path = '/Users/marcWong/Dataset/output/';
-    outputpath = '/Users/marcWong/Dataset/output/';
+    path = '/Users/marcWong/Dataset/hed-newdataset-output/';
+    outputpath = '/Users/marcWong/Dataset/hed-newdataset-output/';
 end
 %%
 while ~feof(fid)
     file_name = fgetl(fid);
     file_name = strrep(file_name,'train/aug_data/0.0_1_0/','');
     file_name = strrep(file_name,'.jpg','');
-    c = imread([path file_name '_nms.jpg']);
-    b = imread([path file_name '_canny_mask.jpg']);
+    c = imread([path file_name '_houghmask.png']);
+    b = imread([path file_name '_nms_canny.png']);
     [m n]=size(c);
     
     %%
@@ -44,8 +44,12 @@ while ~feof(fid)
     e = false([m n]);
     visit = false([m n]);
     
-    c=c>128;
-    b=b>128;
+    if max(c(:))>1
+        c=c>128;
+    end
+    if max(b(:))>1
+        b=b>128;
+    end
     for ii = 1:m
         for jj = 1:n
             if c(ii,jj) && b(ii,jj) && visit(ii,jj)==0
@@ -119,5 +123,5 @@ while ~feof(fid)
         end
     end
     %}
-    imwrite(e,[outputpath file_name '_nms_canny.png']);
+    imwrite(e,[outputpath file_name '_nms_canny_hough.png']);
 end

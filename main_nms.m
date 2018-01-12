@@ -2,6 +2,7 @@
 %parameters
 low_threshold = 0;
 high_threshold = 166;
+expansion_times = 4;
 %k = 5;
 %nms_threshold = [0.8*k k];
 
@@ -17,7 +18,8 @@ elseif dataset ==1
 else
     fid = fopen('/Users/marcWong/Tools/imgProcess/split.txt');
     path = '/Users/marcWong/Dataset/hed-newdataset/';
-    outputpath = '/Users/marcWong/Dataset/hed-newdataset-output/';
+    outputpath = '/Users/marcWong/Dataset/output/';
+    segpath = '/Users/marcWong/Dataset/seg-newdataset/';
 end
 
 %%
@@ -73,14 +75,15 @@ while ~feof(fid)
     imwrite(aa,[outputpath file_name '_fusion.jpg']);
     
     %hed mask
-    sh = graythresh(aa);
-    sh = sh + 0.05;
-    mask = im2bw(aa,sh);
-    %numb = str2double(file_name);
-    %numb = numb -1;
-    %mask = imread([unet_path num2str(numb) '-predict.png']);
-    %mask = logical(mask);
-    %imwrite(mask,'mask.jpg');
+    %sh = graythresh(aa);
+    %sh = sh + 0.05;
+    %mask = im2bw(aa,sh);
+    
+    mask = imread([segpath file_name '-seg.png']);
+    mask = edge(mask,'canny');
+    mask = expand(mask,low_threshold,expansion_times);
+    mask = logical(mask);
+    %imshow(mask);
     
     %nms1 = nms(a1);
     %nms2 = nms(a2);
@@ -105,6 +108,7 @@ while ~feof(fid)
     canny_bw = canny_bw .* mask;
     %nms_fusion = nms_fusion .* mask;
     imwrite(canny_bw,[outputpath file_name '_canny_mask.jpg']);
-    nms_fusion = expand(nms_fusion,0,1);
+    %nms_fusion = expand(nms_fusion,0,1);
+    nms_fusion = nms_fusion .* mask;
     imwrite(nms_fusion,[outputpath file_name '_nms.jpg']);
 end

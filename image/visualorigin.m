@@ -1,5 +1,5 @@
 %%parameters
-expansion_times = 2;
+expansion_times = 1;
 gt_thres = 128;
 % 0 for ningbo3539, 1 for bsds
 dataset = 2;
@@ -11,8 +11,8 @@ dataset = 2;
 
 %_canny
 %.jpg
-visualParameter = '_expansion_cmask_morphing';
-file_suffix = '.png';
+visualParameter = '_houghbw';
+file_suffix = '.jpg';
 %----------------------------------------%
 
 if(dataset == 0)
@@ -28,8 +28,8 @@ elseif dataset ==1
 else
     fid = fopen('/Users/marcWong/Tools/imgProcess/split.txt');
     filepath = '/Users/marcWong/Dataset/hed-newdataset/';
-    nmspath = '/Users/marcWong/Dataset/hed-newdataset-output/';
-    outputpath = '/Users/marcWong/Dataset/hed-newdataset-output/';
+    nmspath = '/Users/marcWong/Dataset/output/';
+    outputpath = '/Users/marcWong/Dataset/output/';
 end
 %%
 while ~feof(fid)
@@ -38,14 +38,15 @@ while ~feof(fid)
     file_name = strrep(file_name,'.jpg','');
     
     c = imread([nmspath file_name visualParameter file_suffix]);
+    %c = expand(c,0,1);
     %c = imread([nmspath file_name '_expansion_cmask.png']);
     if max(max(c(:,:)))==1
         c = uint8(c).*255;
     end
     b = imread([filepath file_name '.jpg']);
-    [m n]=size(b);
-    for i = 1:512
-        for j = 1:512;
+    [m n]=size(c);
+    for i = 1:m
+        for j = 1:n;
             if c(i,j)>128
                 b(i,j,1) = 255;
                 b(i,j,2) = 0;
@@ -53,5 +54,5 @@ while ~feof(fid)
             end
         end
     end
-    imwrite(b,[outputpath file_name '_visualization_gt' visualParameter '.png']);
+    imwrite(b,[outputpath file_name '_visualization_' visualParameter '.png']);
 end

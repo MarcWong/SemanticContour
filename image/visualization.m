@@ -1,5 +1,5 @@
 %%parameters
-expansion_times = 4;
+expansion_times = 5;
 gt_thres = 128;
 % 0 for ningbo3539, 1 for bsds
 dataset = 2;
@@ -11,8 +11,8 @@ dataset = 2;
 
 %_canny
 %.jpg
-visualParameter = '_expansion_cmask_morphing';
-file_suffix = '.png';
+visualParameter = '_houghbw';
+file_suffix = '.jpg';
 %----------------------------------------%
 
 if(dataset == 0)
@@ -28,8 +28,8 @@ elseif dataset ==1
 else
     fid = fopen('/Users/marcWong/Tools/imgProcess/split.txt');
     filepath = '/Users/marcWong/Dataset/hed-newdataset/';
-    nmspath = '/Users/marcWong/Dataset/hed-newdataset-output/';
-    outputpath = '/Users/marcWong/Dataset/hed-newdataset-output/';
+    nmspath = '/Users/marcWong/Dataset/output/';
+    outputpath = '/Users/marcWong/Dataset/output/';
 end
 %%
 while ~feof(fid)

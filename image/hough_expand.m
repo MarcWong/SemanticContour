@@ -13,7 +13,7 @@ elseif dataset ==1
     path = 'image/train/';
 else
     fid = fopen('/Users/marcWong/Tools/imgProcess/split.txt');
-    path = '/Users/marcWong/Dataset/output/';
+    path = '/Users/marcWong/Dataset/hed-newdataset/';
     outputpath = '/Users/marcWong/Dataset/output/';
 end
 %%
@@ -21,9 +21,10 @@ while ~feof(fid)
     file_name = fgetl(fid);
     file_name = strrep(file_name,'train/aug_data/0.0_1_0/','');
     file_name = strrep(file_name,'.jpg','');
-    c = imread([path file_name '_nms.jpg']);
-    b = imread([path file_name '_canny_mask.jpg']);
-    [m n]=size(c);
+    c = imread([path file_name '-fuse.png']);
+    %c = imread([outputpath file_name '_fusion.jpg']);
+    b = imread([outputpath file_name '_houghbw.jpg']);
+    [m n]=size(b);
     
     %%
     %visualization of seed points
@@ -119,5 +120,5 @@ while ~feof(fid)
         end
     end
     %}
-    imwrite(e,[outputpath file_name '_nms_canny.png']);
+    imwrite(e,[outputpath file_name '_houghmask.png']);
 end
