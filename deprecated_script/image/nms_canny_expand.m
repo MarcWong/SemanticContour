@@ -1,7 +1,7 @@
 %%parameters
 expansion_times = 1;
 gt_thres = 128;
-block_num  = 5;
+block_num  = 10;
 % 0 for ningbo3539, 1 for bsds
 dataset = 2;
 if(dataset == 0)
@@ -81,7 +81,7 @@ while ~feof(fid)
     %%
     % morphing
     
-    %{
+
     e_exp = expand(e,0,expansion_times);
     e2 = false([m n]);
     
@@ -118,6 +118,6 @@ while ~feof(fid)
             end
         end
     end
-    %}
+    
     imwrite(e,[outputpath file_name '_nms_canny.png']);
 end

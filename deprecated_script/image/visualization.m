@@ -11,7 +11,7 @@ dataset = 2;
 
 %_canny
 %.jpg
-visualParameter = '_houghbw';
+visualParameter = '_nms';
 file_suffix = '.jpg';
 %----------------------------------------%
 
@@ -39,9 +39,12 @@ while ~feof(fid)
     
     c = imread([nmspath file_name visualParameter file_suffix]);
     %c = imread([nmspath file_name '_expansion_cmask.png']);
+
     if max(max(c(:,:)))==1
         c = uint8(c).*255;
     end
+    
+    
     b = imread([filepath file_name '-gt.png']);
     %b = imread([outputpath file_name '_fusion.jpg']);
     %b = imread(['train/' file_name '-gt.png']);
@@ -50,12 +53,8 @@ while ~feof(fid)
         b = rgb2gray(b);
     end
     
-    
-    
     bb = imread([filepath file_name '.jpg']);
     [m n]=size(b);
-    
-    
     
     e = zeros([m n 3]);
     

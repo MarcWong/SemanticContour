@@ -1,15 +1,20 @@
 %% statistics
 thres = 128;
-dataset = 0;
+dataset = 2;
 
 if dataset == 0
     filepath = 'ningbo/';
     nmspath = 'output/';
     fid = fopen('../ningbo.txt');
-else
+elseif dataset == 1
     filepath = 'train/';
     nmspath = 'bsds_output/';
     fid = fopen('../train_1.lst');
+else
+    fid = fopen('/Users/marcWong/Tools/imgProcess/split.txt');
+    filepath = '/Users/marcWong/Dataset/hed-newdataset/';
+    nmspath = '/Users/marcWong/Dataset/output/';
+    outputpath = '/Users/marcWong/Dataset/output/';
 end
 P_sum = 0;
 R_sum = 0;
@@ -20,14 +25,13 @@ while ~feof(fid)
     file_name = strrep(file_name,'train/aug_data/0.0_1_0/','');
     file_name = strrep(file_name,'.jpg','');
     file_sum = file_sum + 1;
-    gt = imread([filepath file_name '-gt-expand.png']);
+    %gt = imread([filepath file_name '-gt-expand.png']);
     %gt = imread([filepath file_name '-gt.png']);
     gt_origin = imread([filepath file_name '-gt.png']);
-    %gt_origin = imread([filepath file_name '.png']);
-    %nms_img  = imread([nmspath file_name '_expansion_cmask.png']); 
-    nms_img  = imread([nmspath file_name '_expansion_cmask_morphing.png']);
-    %nms_img  = imread([filepath file_name '_canny.jpg']); 
-    %nms_img  = imread([nmspath file_name '_expansion_nms.png']);
+    gt = expand(gt_origin,0,3);
+    nms_img  = imread([nmspath file_name '_segContour.jpg']); 
+    %nms_img  = imread([nmspath file_name '_nms.jpg']);
+    %nms_img  = imread([nmspath file_name '_nms_canny.png']);
     if max(max(nms_img(:,:)))==1
         nms_img = uint8(nms_img) .*255;
     end
@@ -87,7 +91,7 @@ end
 P_sum = P_sum / file_sum;
 R_sum = R_sum / file_sum;
 F1score = 2*P_sum*R_sum/(P_sum+R_sum);
-disp(['result_expansion_nomask']);
+disp(['result']);
 disp(['precision(TP/(TP+FP))= ' num2str(P_sum)]);
 disp(['recall(TP/(TP+FN))= ' num2str(R_sum)]);
 disp(['F1score= ' num2str(F1score)]);

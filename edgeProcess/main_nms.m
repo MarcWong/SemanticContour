@@ -7,7 +7,7 @@ expansion_times = 4;
 %nms_threshold = [0.8*k k];
 
 % 0 for ningbo3539, 1 for bsds
-dataset = 2;
+dataset = 3;
 if(dataset == 0)
     fid = fopen('ningbo.txt');
     path = 'image/ningbo/';
@@ -15,11 +15,16 @@ if(dataset == 0)
 elseif dataset ==1
     fid = fopen('train_1.lst');
     path = 'image/train/';
-else
+elseif dataset ==2
     fid = fopen('/Users/marcWong/Tools/imgProcess/split.txt');
     path = '/Users/marcWong/Dataset/hed-newdataset/';
     outputpath = '/Users/marcWong/Dataset/output/';
     segpath = '/Users/marcWong/Dataset/seg-newdataset/';
+else
+    fid = fopen('bigimg.txt');
+    path = '/Users/marcWong/Dataset/big/';
+    outputpath = '/Users/marcWong/Dataset/big/';
+    segpath = '/Users/marcWong/Dataset/big/';
 end
 
 %%
@@ -27,11 +32,11 @@ while ~feof(fid)
     file_name = fgetl(fid);
     file_name = strrep(file_name,'train/aug_data/0.0_1_0/','');
     file_name = strrep(file_name,'.jpg','');
-    origin = imread([path file_name '.jpg']);
-    gt = imread([path file_name '-gt.png']);
-    if length(size(gt))==3
-        gt = rgb2gray(gt);
-    end
+    %origin = imread([path file_name '.jpg']);
+    %gt = imread([path file_name '-gt.png']);
+    %if length(size(gt))==3
+    %    gt = rgb2gray(gt);
+    %end
     if dataset == 1
         load([path file_name '.mat']);
         a1 = double(FrameStack{1});
@@ -42,7 +47,7 @@ while ~feof(fid)
         a6 = double(FrameStack{6});
         aa =(a1 + a2 + a3 + a4 + a5 + a6)./6;%fusion image
         aa = uint8(aa.*255);
-    else
+    elseif dataset == 2
         a1 = imread([path file_name '-out1.png']);
         a2 = imread([path file_name '-out2.png']);
         a3 = imread([path file_name '-out3.png']);
@@ -58,31 +63,42 @@ while ~feof(fid)
             a6 = rgb2gray(a6);
         end
         aa =uint8((uint16(a1) + uint16(a2) + uint16(a3) + uint16(a4) + uint16(a5)+uint16(a6))./6.0);%fusion image
+    else
+        aa = imread([path file_name '-fuse.png']);
+        if length(size(aa))==3
+            aa = rgb2gray(aa);
+        end
+        aa = uint8(aa);
+        aa = imresize(aa,0.5);
     end
+
+    
 
     [m n] = size(aa);
 
-    for i = 1:m
+%{    
+for i = 1:m
         for j = 1:n
             if aa(i,j) < low_threshold %threshold
                 aa(i,j) = 0;
+                
             %elseif aa(i,j) > high_threshold
              %   aa(i,j) = 255;
             end
         end
     end
-    
-    imwrite(aa,[outputpath file_name '_fusion.jpg']);
+    %}
+    %imwrite(aa,[outputpath file_name '_fusion.jpg']);
     
     %hed mask
     %sh = graythresh(aa);
     %sh = sh + 0.05;
     %mask = im2bw(aa,sh);
     
-    mask = imread([segpath file_name '-seg.png']);
-    mask = edge(mask,'canny');
-    mask = expand(mask,low_threshold,expansion_times);
-    mask = logical(mask);
+    %mask = imread([segpath file_name '-seg.png']);
+    %mask = edge(mask,'canny');
+    %mask = expand(mask,low_threshold,expansion_times);
+    %mask = logical(mask);
     %imshow(mask);
     
     %nms1 = nms(a1);
@@ -91,6 +107,10 @@ while ~feof(fid)
     %nms4 = nms(a4);
     %nms5 = nms(a5);
     nms_fusion = nms(aa);
+    %1.image
+    %2.adjustParam
+    %3. PercentOfPixelsNotEdges(Used for selecting thresholds)
+    %4. ThresholdRatio
     
     %subplot(121);
     %imshow(gt);
@@ -101,14 +121,14 @@ while ~feof(fid)
     imagesc(nms1),colormap(gray),axis image, axis off;
     subplot(224);
     imagesc(nms_fusion),colormap(gray),axis image, axis off;
-    %imshow(origin);
+    imshow(origin);
     %}
-    origin_bw = rgb2gray(origin);
-    canny_bw = edge(origin_bw,'canny',0.2);
-    canny_bw = canny_bw .* mask;
-    %nms_fusion = nms_fusion .* mask;
-    imwrite(canny_bw,[outputpath file_name '_canny_mask.jpg']);
+    %origin_bw = rgb2gray(origin);
+    %canny_bw = edge(origin_bw,'canny',0.2);
+    %canny_bw = canny_bw .* mask;
+    %imwrite(canny_bw,[outputpath file_name '_canny_mask.jpg']);
     %nms_fusion = expand(nms_fusion,0,1);
-    nms_fusion = nms_fusion .* mask;
+    %nms_fusion = nms_fusion .* mask;
     imwrite(nms_fusion,[outputpath file_name '_nms.jpg']);
+    %imwrite(mask,[outputpath file_name '_segContour.jpg']);
 end

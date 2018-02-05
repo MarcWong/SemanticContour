@@ -30,24 +30,27 @@ while ~feof(fid)
     %thresh=[0.01,0.17];
     %sigma=5;
     %BW=edge(double(img_gray),'canny',thresh,sigma);
-    BW = imread([outputpath file_name '_nms_canny.png']);
-    BW = imdilate(BW,ones(2));%????
+    %BW = imread([outputpath file_name '_nms_canny.png']);
+    %BW = imread([outputpath file_name '_nms.jpg']);
+    BW = imread([outputpath file_name '_segContour.jpg']);
+    %BW = imdilate(BW,ones(2));%????
     gt = imread([path file_name '-gt.png']);
     subplot(224), imshow(gt), title('image edge');
     % the theta and rho of transformed space
-    [H,Theta,Rho] = hough(BW,'RhoResolution',8);
+    [H,Theta,Rho] = hough(BW,'RhoResolution',5,'Theta',-90:5:89.5);
     subplot(222), imshow(H,[],'XData',Theta,'YData',Rho,'InitialMagnification','fit'),...
         title('rho\_theta space and peaks');
     xlabel('\theta'), ylabel('\rho');
     axis on, axis normal, hold on;
     % label the top x intersections
-    %P  = houghpeaks(H,100,'threshold',ceil(0.3*max(H(:))));
-    P  = houghpeaks(H,200);
+    %P  = houghpeaks(H,30,'NHoodSize',[4 4]);
+    P  = houghpeaks(H,10,'threshold',ceil(0.2*max(H(:))));
     x = Theta(P(:,2)); 
     y = Rho(P(:,1));
     plot(x,y,'*','color','r');
     %% find lines and plot them
-    lines = houghlines(BW,Theta,Rho,P,'FillGap',20,'MinLength',40);
+    lines = houghlines(BW,Theta,Rho,P,'FillGap',10,'MinLength',50);
+    %lines = houghlines(BW,Theta,Rho,P,'MinLength',30);
     subplot(221), hold on
     max_len = 0;
     for k = 1:length(lines)
