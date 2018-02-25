@@ -13,4 +13,3 @@ for imgNum = 1:imgSum
 end
 e = e>0;
 imwrite(e,[outputpath 'output_final.jpg']);
-visualorigin;

@@ -2,12 +2,14 @@
 expansion_times = 1;
 gt_thres = 128;
 
-%edgeImg = '/Users/marcWong/Dataset/big/1/output_final.jpg';
+edgeImg = '/Users/marcWong/Dataset/big/1/output_final.jpg';
 %edgeImg = '/Users/marcWong/Dataset/big/1/contour.jpg';
-edgeImg = '/Users/marcWong/Dataset/big/1/1-gt.png';
+%edgeImg = '/Users/marcWong/Dataset/big/1/1-gt.png';
 
 originalImg = '/Users/marcWong/Dataset/big/1/1.jpg';
-outputImg = '/Users/marcWong/Dataset/big/1/original_visualization_gt.jpg';
+%outputImg = '/Users/marcWong/Dataset/big/1/original_visualization_gt.jpg';
+outputImg = '/Users/marcWong/Dataset/big/1/visualization.jpg';
+
 %----------------------------------------%
 edgeI = imread(edgeImg);
 %edgeI = imresize(edgeI,0.5);
