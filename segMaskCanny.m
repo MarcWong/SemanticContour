@@ -1,7 +1,26 @@
-gtpath = '/Users/marcWong/Dataset/slam/final/';
-srcpath = '/Users/marcWong/Dataset/slam/src/';
-outputpath = '/Users/marcWong/Dataset/slam/output/';
-outputVispath = '/Users/marcWong/Dataset/slam/outputVis/';
+function out = segMaskCanny(varargin)
+% usage: segMaskCanny(path,os_param);
+% os_param = 0 % for unix/mac os
+% os_param = 1 % for windows
+path = varargin{1};
+os_param = varargin{2};
+
+if os_param == 0
+    gtpath = [path '/final/' ];
+    srcpath = [path '/src/' ];
+    outputpath = [path '/output/' ];
+    outputVispath = [path '/outputVis/' ];
+elseif os_param == 1
+    gtpath = [path '\final\' ];
+    srcpath = [path '\src\' ];
+    outputpath = [path '\output\' ];
+    outputVispath = [path '\outputVis\' ];
+else
+    display('please give a valid os_param, 0 for unix/mac, 1 for windows');
+    out = -1;
+    return;
+end
+
 list = dir([gtpath '*.jpg']);
 for k = 1:length(list)
     imggt = imread([gtpath list(k).name]);
@@ -14,12 +33,14 @@ for k = 1:length(list)
         for j = 1:n
             if imggt(i,j) == 1
                 imggt(i,j) = 255;
-            elseif imggt(i,j) == 2
+            else
                 imggt(i,j) = 0;
             end
         end
     end
-    imgCont = edge(imggt,'canny',0.5);
+    %imgCont = edge(imggt,'canny',0.5);
+    
+    %{
     b = edge(rgb2gray(imgsrc),'canny',0.5);
     c = imgCont .* b;
     %c = expand(c,0,1);
@@ -62,7 +83,7 @@ for k = 1:length(list)
             end
         end
     end
-    
+    %}
    %{
     e = expand(e,0,3);
     for i = 1:m
@@ -76,5 +97,20 @@ for k = 1:length(list)
     end
     imwrite(imgsrc,[outputVispath list(k).name]);
     %}
-    imwrite(e,[outputpath list(k).name]);
+    %imwrite(e,[outputpath list(k).name]);
+
+    %{
+    for i = 1:m
+        for j = 1:n
+            if imgCont(i,j)
+                imgsrc(i,j,1) = 255;
+                imgsrc(i,j,2) = 0;
+                imgsrc(i,j,3) = 0;
+            end
+        end
+    end
+    imwrite(imgsrc,[outputVispath list(k).name]);
+     %} 
+    imwrite(imggt,[outputpath list(k).name]);
+end
 end
