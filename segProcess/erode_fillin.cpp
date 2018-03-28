@@ -10,17 +10,29 @@ stringstream ss2;
 
 void RemoveSmallRegion(Mat& Src, Mat& Dst, int AreaLimit = 50, int CheckMode = 1, int NeihborMode = 0);
 
+const int mode = 0;//0: segmorph, 1: cannymorph
 
 int main()
 {
 	bool blank = false;
-	char *path1 = "slam/seg/";
-	char *path2 = "slam/output/";
-	
+
+	char *path1;
+	char *path2;
+
+	if (mode == 0) //segmorph
+	{
+		path1 = "slam/seg/";
+		path2 = "slam/segmorph/";
+	}
+	else{
+		path1 = "slam/segmask_canny/";
+		path2 = "slam/output/";
+	}
+
 	char *suffix1 = ".jpg";
 	char *suffix2 = ".jpg";
 
-	for (int ii = 1440; ii <= 2248; ii++){
+	for (int ii = 1; ii <= 2248; ii++){
 		
 		char *imagePath = new char[strlen(path1) + sizeof(ii)+strlen(suffix1)];
 		sprintf(imagePath, "%s%06d%s", path1, ii, suffix1);
@@ -54,11 +66,20 @@ int main()
 				}
 			}
 		}
-		cout << "Image Binary processed." << endl;
+		cout << "Image Binary processed: " << imagePath << endl;
 
-		RemoveSmallRegion(Src, Dst, 100000, 1, 0);
-		RemoveSmallRegion(Dst, Dst, 100000, 0, 0);
-		cout << "Done!" << endl;
+		if (mode == 0) //segmorph
+		{
+			RemoveSmallRegion(Src, Dst, 40000, 1, 0);
+			RemoveSmallRegion(Dst, Dst, 40000, 0, 0);
+		}
+		else{ // cannymorph
+			RemoveSmallRegion(Src, Dst, 400, 1, 1);
+			//RemoveSmallRegion(Dst, Dst, 40000, 0, 0);
+		}
+				
+
+		cout << "Writing: " << OutPath << endl;
 		imwrite(OutPath, Dst);
 
 		t = ((double)getTickCount() - t) / getTickFrequency();
@@ -138,10 +159,10 @@ void RemoveSmallRegion(Mat& Src, Mat& Dst, int AreaLimit, int CheckMode, int Nei
 				Pointlabel.at<uchar>(i, j) = 1;
 				int CheckResult = 0;                                               //用于判断结果（是否超出大小），0为未超出，1为超出  
 
-				for (int z = 0; z<GrowBuffer.size(); z++)
+				for (int z = 0; z < GrowBuffer.size(); z++)
 				{
 
-					for (int q = 0; q<NeihborCount; q++)                                      //检查四个邻域点  
+					for (int q = 0; q < NeihborCount; q++)                                      //检查四个邻域点  
 					{
 						CurrX = GrowBuffer.at(z).x + NeihborPos.at(q).x;
 						CurrY = GrowBuffer.at(z).y + NeihborPos.at(q).y;
@@ -158,7 +179,7 @@ void RemoveSmallRegion(Mat& Src, Mat& Dst, int AreaLimit, int CheckMode, int Nei
 				}
 				if (GrowBuffer.size()>AreaLimit) CheckResult = 2;                 //判断结果（是否超出限定的大小），1为未超出，2为超出  
 				else { CheckResult = 1;   RemoveCount++; }
-				for (int z = 0; z<GrowBuffer.size(); z++)                         //更新Label记录  
+				for (int z = 0; z < GrowBuffer.size(); z++)                         //更新Label记录  
 				{
 					CurrX = GrowBuffer.at(z).x;
 					CurrY = GrowBuffer.at(z).y;
