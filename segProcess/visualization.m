@@ -2,15 +2,15 @@
 expansion_times = 1;
 gt_thres = 0;
 
-edgeImg = '/Users/wuyoukun/Desktop/pku_course/github-program/big/1/output_final.jpg';
+edgeImg = '/Users/marcWong/Dataset/big/1/output_final.jpg';
 %edgeImg = '/Users/marcWong/Dataset/big/1/contour.jpg';
 
-gtImg = '/Users/wuyoukun/Desktop/pku_course/github-program/big/1/1-gt.png';
+gtImg = '/Users/marcWong/Dataset/big/1/1-gt.png';
 
-originalImg = '/Users/wuyoukun/Desktop/pku_course/github-program/big/1/1.jpg';
+originalImg = '/Users/marcWong/Dataset/big/1/1.jpg';
 
-outputGt = '/Users/wuyoukun/Desktop/pku_course/github-program/big/1/visualization_gt.jpg';
-outputCmp = '/Users/wuyoukun/Desktop/pku_course/github-program/big/1/visualization_compare.jpg';
+outputGt = '/Users/marcWong/Dataset/big/1/visualization_gt.jpg';
+outputCmp = '/Users/marcWong/Dataset/big/1/visualization_compare.jpg';
 
 %----------------------------------------%
 
