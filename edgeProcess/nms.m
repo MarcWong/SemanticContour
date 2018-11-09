@@ -93,8 +93,6 @@ t3 = [t-.5; t; t+.5]; % We will average values at t-.5, t, t+.5
 gau = sum(exp(-(t3.*t3)/(2*ssq))).'/(6*pi*ssq); % the gaussian 1-d filter
 dgau = (-t.* exp(-(t.*t)/(2*ssq))/ ssq).'; % derivative of a gaussian
 
-
-
 % Convolve the filters with the image in each direction
 % The canny edge detector first requires convolutions with
 % the gaussian, and then with the derivitave of a gauusian.
