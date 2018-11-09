@@ -22,11 +22,10 @@ elseif dataset ==2
     segpath = '/Users/marcWong/Dataset/seg-newdataset/';
 else
     fid = fopen('bigimg.txt');
-    path = '/Users/wuyoukun/Desktop/pku_course/github-program/big/';
-    outputpath = '/Users/wuyoukun/Desktop/pku_course/github-program/big/';
-    segpath = '/Users/wuyoukun/Desktop/pku_course/github-program/big/';
+    path = '/Users/marcWong/Dataset/big/';
+    outputpath = '/Users/marcWong/Dataset/big/';
+    segpath = '/Users/marcWong/Dataset/big/';
 end
-
 
 %%
 while ~feof(fid)

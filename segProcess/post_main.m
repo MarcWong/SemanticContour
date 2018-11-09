@@ -1,5 +1,5 @@
-inputpath = '/Users/wuyoukun/Desktop/pku_course/github-program/big/1/result/';
-outputpath = '/Users/wuyoukun/Desktop/pku_course/github-program/big/1/';
+inputpath = '/Users/marcWong/Dataset/big/1/result/';
+outputpath = '/Users/marcWong/Dataset/big/1/';
 listing = dir([inputpath '*.jpg']);
 imgSum = length(listing);
 m = 2500;
