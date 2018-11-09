@@ -1,4 +1,4 @@
-prePath = '/Users/marcWong/Dataset/big/1/';
+prePath = '/Users/wuyoukun/Desktop/pku_course/github-program/big/1/';
 segFile = [prePath '1-seg.png'];
 segImg = imread(segFile);
 if length(size(segImg))==3
