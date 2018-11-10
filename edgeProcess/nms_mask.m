@@ -1,4 +1,3 @@
-%%
 %parameters
 low_threshold = 0;
 high_threshold = 166;
