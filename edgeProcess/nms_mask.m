@@ -2,7 +2,7 @@
 %parameters
 low_threshold = 0;
 high_threshold = 166;
-expansion_times = 4;
+expansion_times = 0;
 %k = 5;
 %nms_threshold = [0.8*k k];
 
@@ -26,7 +26,6 @@ else
     outputpath = '/Users/wuyoukun/Desktop/pku_course/github-program/big/';
     segpath = '/Users/wuyoukun/Desktop/pku_course/github-program/big/';
 end
-
 
 %%
 while ~feof(fid)
@@ -92,15 +91,15 @@ for i = 1:m
     %imwrite(aa,[outputpath file_name '_fusion.jpg']);
     
     %hed mask
-    %sh = graythresh(aa);
-    %sh = sh + 0.05;
-    %mask = im2bw(aa,sh);
+    sh = graythresh(aa);
+    sh = sh + 0.05;
+    mask = im2bw(aa,sh);
     
     %mask = imread([segpath file_name '-seg.png']);
     %mask = edge(mask,'canny');
-    %mask = expand(mask,low_threshold,expansion_times);
-    %mask = logical(mask);
-    %imshow(mask);
+    mask = expand(mask,low_threshold,expansion_times);
+    mask = logical(mask);
+    imshow(mask);
     
     %nms1 = nms(a1);
     %nms2 = nms(a2);
@@ -129,7 +128,11 @@ for i = 1:m
     %canny_bw = canny_bw .* mask;
     %imwrite(canny_bw,[outputpath file_name '_canny_mask.jpg']);
     %nms_fusion = expand(nms_fusion,0,1);
-    %nms_fusion = nms_fusion .* mask;
-    imwrite(nms_fusion,[outputpath file_name '_nms.jpg']);
+    mask = imread([path file_name 'contour.jpg']);
+    
+    nms_fusion = nms_fusion .* logical(mask);
+    
+    imwrite(nms_fusion,[outputpath file_name '_nms_mask.jpg']);
+    %imwrite(nms_fusion,[outputpath file_name '_nms.jpg']);
     %imwrite(mask,[outputpath file_name '_segContour.jpg']);
 end

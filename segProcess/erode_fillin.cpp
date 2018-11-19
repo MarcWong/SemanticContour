@@ -211,6 +211,5 @@ void RemoveSmallRegion(Mat& Src, Mat& Dst, int AreaLimit, int CheckMode, int Nei
 			}
 		}
 	}
-
 	cout << RemoveCount << " objects removed." << endl;
 }
