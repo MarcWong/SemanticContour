@@ -2,7 +2,7 @@
 %parameters
 low_threshold = 0;
 high_threshold = 166;
-expansion_times = 4;
+expansion_times = 0;
 %k = 5;
 %nms_threshold = [0.8*k k];
 
@@ -127,8 +127,11 @@ for i = 1:m
     %canny_bw = edge(origin_bw,'canny',0.2);
     %canny_bw = canny_bw .* mask;
     %imwrite(canny_bw,[outputpath file_name '_canny_mask.jpg']);
-    nms_fusion = expand(nms_fusion,0,1);
-    nms_fusion = nms_fusion .* mask;
+    %nms_fusion = expand(nms_fusion,0,1);
+    mask = imread([path file_name 'contour.jpg']);
+    
+    nms_fusion = nms_fusion .* logical(mask);
+    
     imwrite(nms_fusion,[outputpath file_name '_nms_mask.jpg']);
     %imwrite(nms_fusion,[outputpath file_name '_nms.jpg']);
     %imwrite(mask,[outputpath file_name '_segContour.jpg']);
